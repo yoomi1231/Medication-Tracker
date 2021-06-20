@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import MedFormHooks from './MedForm-Hooks';
 import { fetchMed, editMed } from '../../actions';
@@ -18,11 +17,8 @@ const MedEdit = (props) => {
     const dispatch = useDispatch();
     const medication = useSelector(state => state.medications[props.match.params.id]);
 
-
     useEffect(() => {
         dispatch(fetchMed(props.match.params.id))
-        console.log(props.match.params.id)
-        console.log(medication)
     }, []);
 
     const onSubmit = (formValues) => {

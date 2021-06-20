@@ -168,7 +168,7 @@ const MedList = () => {
 
             return (
                 <MedRow key={`${name}-${index}`}>
-                    <MedName to={`/medications/${id}`}>{renderMedName(name)}</MedName>
+                    <MedName to={`/medications/list/${id}`}>{renderMedName(name)}</MedName>
                     <Freq>{renderFrequency(frequency)}</Freq>
                     <RowMenu>{renderNote(note)}</RowMenu>
                     <RowMenu>{renderButton(id, name)}</RowMenu>

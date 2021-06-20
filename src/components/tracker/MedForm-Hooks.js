@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -60,22 +59,21 @@ const SubmitButton = styled.button`
     font-size: 15px;
 `;
 
-
-
 const ErrorContainer = styled.div`
     color: red;
 `;
 
 const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
-    const { register, handleSubmit, watch, getValues, formState: { errors } } = useForm();
-    const schedule = watch("schedule");
-    // const frequencyOptions = [
-    //     {label: "Morning", value: "morning"},
-    //     {label: "Noon", value: "noon"},
-    //     {label: "Evening", value: "evening"},
-    //     {label: "Bedtime", value: "bedtime"},
-    //     {label: "Weekly", value: "weekly"} 
-    // ];
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm();
+    // const schedule = watch("schedule");
+    // // const frequencyOptions = [
+    // //     {label: "Morning", value: "morning"},
+    // //     {label: "Noon", value: "noon"},
+    // //     {label: "Evening", value: "evening"},
+    // //     {label: "Bedtime", value: "bedtime"},
+    // //     {label: "Weekly", value: "weekly"} 
+    // // ];
+    
     const frequencyOptions = ["Morning", "Noon", "Evening", "Bedtime", "Weekly", "Occasional Use"];
 
     const onSubmit = (formValues) => {
@@ -131,9 +129,7 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                             </span>
                         )}
                     </ErrorContainer>
-
                 </ContentContainer>
-
                 <ContentContainer>
                     <FormLabel for="route">Route of Administration</FormLabel>
                     <select defaultValue={getDefaultValue('route')} name="route" id="route" {...register('route', { required: true })}>
@@ -148,10 +144,8 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                                 Must choose a route
                             </span>
                         )}
-                    </ErrorContainer>
-                    
+                    </ErrorContainer>                  
                 </ContentContainer>
-
                 <ContentContainer>
                     <FormLabel for="frequency">Frequency</FormLabel>
                     <InputWrapper>
@@ -171,11 +165,11 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                                     <input 
                                         defaultValue={getDefaultValue(`frequency[${index}].detail`)} 
                                         name={`frequency[${index}].detail`} 
-                                        type="number" 
-                                        min="1" 
+                                        type="number"
                                         placeholder="how many tablets?" 
                                         {...register(`frequency[${index}].detail`, { 
-                                            validate: validateFreqDetail
+                                            validate: validateFreqDetail,
+                                            min: 1
                                         })} 
                                     />
                                 </div>
@@ -184,14 +178,12 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                         <ErrorContainer>
                             {errors.frequency && (
                                 <span>
-                                    Please select frequency and enter count
+                                    Please select frequency and enter valid count
                                 </span>
                             )}
                         </ErrorContainer>
                     </InputWrapper>
-                </ContentContainer>
-                
-                
+                </ContentContainer>                       
                 <ContentContainer>
                     <FormLabel for="note">Enter days for a weekly medication</FormLabel>
                     <input type="text" name="weekly" {...register('weekly', { validate: validateWeekly })} />
