@@ -34,3 +34,4 @@ export const deleteMed = (id) => async dispatch => {
     dispatch({ type: 'DELETE_MED', payload: id })
     history.push('/medications/list');
 };
+

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMeds } from '../../actions';
 import styled from '@emotion/styled';
@@ -11,7 +11,12 @@ const FrequencyContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    background-color: #fff2f2;
+    ${'' /* background-color: #fff2f2; */}
+    background-color: ${props => props.colorDisplay};
+`;
+
+const TextDisplay = styled.span`
+    visibility: ${props => props.textDisplay};
 `;
 
 const Container = styled.div`
@@ -46,6 +51,10 @@ const WeeklyMed = styled.div`
 
 const FreqLabel = styled.span`
     font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
 `;
 
 const Med = styled.div`
@@ -66,14 +75,30 @@ const DailyTracker = () => {
     const day = today.getDay();
     const medications = useSelector(state => Object.values(state.medications));
     const dispatch = useDispatch();
+    const [taken, setTaken] = useState([]);
+    const [dateTaken, setDateTaken] = useState();
         
     useEffect(() => {
         dispatch(fetchMeds());
+        const data = localStorage.getItem('data');
+        if (data) {
+            setTaken(JSON.parse(data))
+        };
+
+        const dateData = localStorage.getItem('dateData');
+        if (dateData) {
+            setDateTaken(JSON.parse(dateData))
+        };
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('data', JSON.stringify(taken));
+        localStorage.setItem('dateData', JSON.stringify(dateTaken));
+    }, [taken, dateTaken]);
 
     if (medications.length === 0) {
         return <div>loading...</div>
-    }
+    };
 
     const renderMedName = (index) => {
         return medications.map((entry) => {
@@ -106,11 +131,32 @@ const DailyTracker = () => {
         })
     };
 
+    const markTaken = (index) => {
+        setTaken([...taken, index]);
+        setDateTaken(date);
+        // localStorage.setItem('dateData', JSON.stringify(dada));
+    };
+
+    if (dateTaken !== date) {
+        localStorage.clear();
+    };
+
     const renderList = () => {
         return FREQ_LABELS.map((label, index) => {
             return (
-                <FrequencyContainer key={`${label}-${index}`}>
-                    <FreqLabel>{label}</FreqLabel>
+                <FrequencyContainer 
+                    key={`${label}-${index}`} 
+                    onClick={() => markTaken(index)}
+                    colorDisplay={taken.indexOf(index) > -1 ? "pink" : "#fff2f2"}
+                >
+                    <FreqLabel>
+                        <TextDisplay
+                            textDisplay={taken.indexOf(index) > -1 ? "visible" : "hidden"}
+                        >
+                            ✓  
+                        </TextDisplay> 
+                        <div>{label}</div>
+                    </FreqLabel>
                     <span>{renderMedName(index)}</span>
                 </FrequencyContainer>
             );
