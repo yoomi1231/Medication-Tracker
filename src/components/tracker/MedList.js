@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchMeds, deleteMed } from '../../actions';
 import Modal from 'react-modal';
+import { v4 as uuidv4 } from 'uuid';
 import styled from '@emotion/styled';
-
-const ButtonGroup = styled.div`
-    
-`;
+import { fetchMeds, deleteMed } from '../../actions';
 
 const EditButton = styled(Link)`
     text-decoration: none;
@@ -39,6 +36,9 @@ const ContentContainer = styled.div`
     padding-top: 20px;
     width: 80%;
     margin: auto;
+    @media (max-width: 1000px) {
+        width: 800px;
+    }
 `;
 
 const ListContainer = styled.div`
@@ -82,6 +82,7 @@ const MedName = styled(Link)`
 const Freq = styled(RowMenu)`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    
 `;
 
 const DeleteModal = styled(Modal)`
@@ -102,7 +103,7 @@ const MedList = () => {
 
     useEffect(() => {
         dispatch(fetchMeds());
-    }, []);
+    }, [dispatch]);
 
     if (!medications) {
         return <div>loading...</div>
@@ -124,18 +125,23 @@ const MedList = () => {
     const renderFrequency = (frequency) => {
         return FREQ_LABELS.map((label, index) => {
             if (!Array.isArray(frequency)) {
-                frequency = [frequency];
+                return (
+                    <div key={uuidv4()}>
+                        {frequency = [frequency]}
+                    </div>
+                ); 
             }
             
             const filtered = frequency.filter(freq => freq.label === label);
             if (filtered.length > 0) {
                 return (
-                    <div key={`${index}-${label}`}>
+                    <div key={uuidv4()}>
                         {filtered[0].detail}
                     </div>
                 );
             }
-            return <div></div>;
+            
+            return <div key={uuidv4()}></div>;
         });
     };
 
@@ -155,10 +161,10 @@ const MedList = () => {
 
     const renderButton = (id, name ) => {
         return (
-            <ButtonGroup>
+            <div>
                 <EditButton to={`/medications/edit/${id}`}>Edit</EditButton>
                 <ButtonItem onClick={handleClick(id, name)}>Delete</ButtonItem>
-            </ButtonGroup>
+            </div>
         );
     };
 
@@ -167,7 +173,7 @@ const MedList = () => {
             let { id, name, frequency, note } = entry;
 
             return (
-                <MedRow key={`${name}-${index}`}>
+                <MedRow key={uuidv4()}>    
                     <MedName to={`/medications/list/${id}`}>{renderMedName(name)}</MedName>
                     <Freq>{renderFrequency(frequency)}</Freq>
                     <RowMenu>{renderNote(note)}</RowMenu>
@@ -182,7 +188,7 @@ const MedList = () => {
             <CreateButton to="/medications/new" id="create-button">Create New</CreateButton>
             <ListContainer>
                 <TopMedRow>
-                    <RowMenu>Name/Strength</RowMenu>
+                    <MedName>Name</MedName>
                     <Freq>
                         <span>Morning</span>
                         <span>Noon</span>

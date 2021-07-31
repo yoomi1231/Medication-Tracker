@@ -15,18 +15,12 @@ const Container = styled.div`
     height: 100vh;
     width: 100vw;
     font-family: 'Lato', sans-serif;
-    ${'' /* background-color: #B5C8C0; */}
     background-image: url(${pillsImage}); 
     min-height: 500px;
-    ${'' /* no-repeat center center fixed; */}
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    @media (max-width: 1000px) {
-        width: 1000px;
-    }
-    
 `;
 
 const App = () => {

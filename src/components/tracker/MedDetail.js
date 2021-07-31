@@ -39,7 +39,7 @@ const MedDetail = (props) => {
 
     useEffect(() => {
         dispatch(fetchMed(props.match.params.id))
-    }, []);
+    }, [dispatch, props.match.params.id]);
 
     const [{ data, loading, error }] = useAxios(
         `https://api.fda.gov/drug/label.json?api_key=bqONWlP20duVonhNUJ5YO6xukgeqjRyLH9M75ajd&search=openfda.brand_name:"${medication.name}"`  

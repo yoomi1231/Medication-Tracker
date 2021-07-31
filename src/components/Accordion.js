@@ -29,7 +29,7 @@ const Accordion = ({ items }) => {
     const renderedItems = items.map((item, index) => {
         const active = index === activeIndex ? 'active' : '';
         return (
-            <Container>
+            <Container key={`${item}-${index}`}>
                 <Title active={active} onClick={() => onTitleClick(index)}>
                     {item.title}
                 </Title>

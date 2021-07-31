@@ -19,7 +19,7 @@ const MedEdit = (props) => {
 
     useEffect(() => {
         dispatch(fetchMed(props.match.params.id))
-    }, []);
+    }, [dispatch, props.match.params.id]);
 
     const onSubmit = (formValues) => {
         dispatch(editMed(props.match.params.id, formValues));

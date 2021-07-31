@@ -10,7 +10,7 @@ const MedDelete = (props) => {
 
     useEffect(() => {
         dispatch(fetchMed(props.match.params.id))
-    }, []);
+    }, [dispatch, props.match.params.id]);
 
     const renderContent = () => {
         if (!medication) {

@@ -120,7 +120,7 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
         <FormContainer>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <ContentContainer>
-                    <FormLabel for="name">Medicaiton Name & Strength</FormLabel>
+                    <FormLabel htmlFor="name">Medicaiton Name</FormLabel>
                     <input defaultValue={getDefaultValue('name')} type="text" name="name" id="name" {...register('name', { required: true })} />
                     <ErrorContainer>
                         {errors.name && (
@@ -131,7 +131,7 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                     </ErrorContainer>
                 </ContentContainer>
                 <ContentContainer>
-                    <FormLabel for="route">Route of Administration</FormLabel>
+                    <FormLabel htmlFor="route">Route of Administration</FormLabel>
                     <select defaultValue={getDefaultValue('route')} name="route" id="route" {...register('route', { required: true })}>
                         <option></option>
                         <option value="oral">Oral</option>
@@ -147,12 +147,12 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                     </ErrorContainer>                  
                 </ContentContainer>
                 <ContentContainer>
-                    <FormLabel for="frequency">Frequency</FormLabel>
+                    <FormLabel htmlFor="frequency">Frequency</FormLabel>
                     <InputWrapper>
                         <div>
                             {frequencyOptions.map((freq, index) =>
-                                <div>
-                                    <label for={freq}>{freq}</label>
+                                <div key={`${freq}-${index}`}>
+                                    <label htmlFor={freq}>{freq}</label>
                                     <input 
                                         defaultValue={getDefaultValue(`frequency[${index}].label`)} 
                                         name={`frequency[${index}].label`} 
@@ -185,7 +185,7 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                     </InputWrapper>
                 </ContentContainer>                       
                 <ContentContainer>
-                    <FormLabel for="note">Enter days for a weekly medication</FormLabel>
+                    <FormLabel htmlFor="note">Enter days for a weekly medication</FormLabel>
                     <input type="text" name="weekly" {...register('weekly', { validate: validateWeekly })} />
                     <ErrorContainer>
                         {errors.weekly && (
@@ -196,7 +196,7 @@ const MedFormHooks = ({ onFormSubmit, defaultValue }) => {
                     </ErrorContainer>
                 </ContentContainer>
                 <ContentContainer>
-                    <FormLabel for="note">Note</FormLabel>
+                    <FormLabel htmlFor="note">Note</FormLabel>
                     <input defaultValue={getDefaultValue('note')} type="text" name="note" {...register('note')} />
                 </ContentContainer>
                 <ButtonGroup>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMeds } from '../../actions';
 import styled from '@emotion/styled';
+import _ from 'lodash';
 
 const FrequencyContainer = styled.div`
     margin: 10px 0;
@@ -11,8 +12,15 @@ const FrequencyContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    ${'' /* background-color: #fff2f2; */}
     background-color: ${props => props.colorDisplay};
+  
+    @media (max-width: 600px) {
+        height: 200px;
+        width: 400px;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+    }
 `;
 
 const TextDisplay = styled.span`
@@ -65,9 +73,9 @@ const ListContainer = styled.div`
 `;
 
 const FREQ_LABELS = ["Morning", "Noon", "Evening", "Bedtime"];
-const weekdays = new Array(
+const weekdays = [
     "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
-);
+];
     
 const DailyTracker = () => {
     const today = new Date();
@@ -75,21 +83,35 @@ const DailyTracker = () => {
     const day = today.getDay();
     const medications = useSelector(state => Object.values(state.medications));
     const dispatch = useDispatch();
-    const [taken, setTaken] = useState([]);
-    const [dateTaken, setDateTaken] = useState();
+
+
+    const data = localStorage.getItem('data');
+    const initial = data ? JSON.parse(data) : [];
+    const [taken, setTaken] = useState(initial);
+
+    const dateData = localStorage.getItem('dateData');
+    const initialDate = dateData ? JSON.parse(dateData) : '';
+    const [dateTaken, setDateTaken] = useState(initialDate);
+
+
+    const [todayDate, setTodayDate] = useState(date);
         
     useEffect(() => {
         dispatch(fetchMeds());
-        const data = localStorage.getItem('data');
-        if (data) {
-            setTaken(JSON.parse(data))
-        };
+        setTodayDate(date);
 
-        const dateData = localStorage.getItem('dateData');
-        if (dateData) {
-            setDateTaken(JSON.parse(dateData))
-        };
-    }, []);
+        // const data = localStorage.getItem('data');
+        // if (data) {
+        //     setTaken(JSON.parse(data))
+        // };
+
+        // const dateData = localStorage.getItem('dateData');
+        // if (dateData) {
+        //     setDateTaken(JSON.parse(dateData))
+        // };
+
+
+    }, [setTodayDate, date, dispatch]);
 
     useEffect(() => {
         localStorage.setItem('data', JSON.stringify(taken));
@@ -113,31 +135,38 @@ const DailyTracker = () => {
                 );
             } 
 
-            return null;      
+            return "";      
         });
     };
+    console.log(day)
 
     const displayWeeklyMed = () => {
-        return medications.map((entry) => {
+        let meds = [];
+        medications.forEach((entry) => {
             let { frequency, name, weekly } = entry;
 
             if (weekly === weekdays[day].toLowerCase()) {
-                return (
+                meds.push(
                     <WeeklyMed key={`${frequency}-${name}`}> 
                         <div>{name}</div>
                     </WeeklyMed>
                 );
-            }
-        })
+            } 
+        });
+
+        return meds.length === 0 ? (
+            <WeeklyMed key='no-meds'> 
+                <div>None</div>
+            </WeeklyMed>
+        ) : meds;
     };
 
     const markTaken = (index) => {
-        setTaken([...taken, index]);
         setDateTaken(date);
-        // localStorage.setItem('dateData', JSON.stringify(dada));
+        setTaken([...taken, index]);
     };
 
-    if (dateTaken !== date) {
+    if (dateTaken !== todayDate) {
         localStorage.clear();
     };
 
